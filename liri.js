@@ -23,45 +23,93 @@ var liriString = process.argv[3];
 
 // create a function
 var chooseFunction = function () {
-    // create a switch
-    switch (liriFunction) {
+  // create a switch
+  switch (liriFunction) {
 
-        case "my-tweets":
-          return twitterFunction();
-      
-        case "spotify-this-song":
-          return spotifyFunction();
-      
-        case "movie-this":
-          return movieFunction();
-      
-        case "do-what-it-says":
-          return randomFunction();
-      
-        default:
-          return console.log("Invalid input. Try again.") ;
-        }
+    case "my-tweets":
+      return twitterFunction();
+
+    case "spotify-this-song":
+      return spotifyFunction();
+
+    case "movie-this":
+      return movieFunction();
+
+    case "do-what-it-says":
+      return randomFunction();
+
+    default:
+      return console.log("Invalid input. Try again.");
+  }
 }
 
 // individual functions
 
 // "my-tweets"
 var twitterFunction = function () {
-    console.log('test +++')
+  // console.log('test +++')
+  // display 5 previous tweets and when they were created
+  // parameters
+  var params = { q: process.env.SPOTIFY_ID, count: 5 };
+  // api get
+  client.get('search/tweets', params, function (error, tweets, response) {
+    if (error) {
+      return console.log('Error occurred: ' + error);
+    }
+    else {
+      // display tweets
+      return console.log(tweets.statuses);
+    }
+  });
 }
+
 
 // "spotify-this"
 var spotifyFunction = function () {
-
+  // display song information: artist(s), song name, preview link, album
+  spotify.search({ type: 'track', query: liriString }, function (err, data) {
+    if (err) {
+      return console.log('Error occurred: ' + err);
+    }
+    else {
+      // return song data
+      return console.log(data.tracks.items[0]);
+    }
+  })
 }
-
 // "movie-this"
 var movieFunction = function () {
+  // display:
+  // * Title of the movie.
+  // * Year the movie came out.
+  // * IMDB Rating of the movie.
+  // * Rotten Tomatoes Rating of the movie.
+  // * Country where the movie was produced.
+  // * Language of the movie.
+  // * Plot of the movie.
+  // * Actors in the movie.
 
+  // create queryUrl
+  var queryUrl = "http://www.omdbapi.com/?t=" + liriString + "&y=&plot=short&tomatoes=true&r=json";
+    // use request to request from OMDB
+    request(queryUrl, function(error, response, body) {
+      // error/status check
+      if (!error && response.statusCode === 200) {
+        // store parsed object for recall
+        var movie = JSON.parse(body)
+        // display results
+        console.log(movie.title)
+      }
+      else {
+        console.log("Error: " + error)
+      }
+    })
 }
 
 // "do-what-it-says"
 var randomFunction = function () {
+  // * Using the `fs` Node package, LIRI will take the text inside of random.txt and then use it to call one of LIRI's commands.
+
 
 }
 
