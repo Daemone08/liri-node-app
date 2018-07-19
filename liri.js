@@ -73,7 +73,7 @@ var spotifyFunction = function () {
     }
     else {
       // return song data
-      return console.log(data.tracks.items[0]);
+      return console.log(data.tracks.items[0].artists[0]["name"]);
     }
   })
 }
