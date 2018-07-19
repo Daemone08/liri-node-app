@@ -90,7 +90,7 @@ var movieFunction = function () {
   // * Actors in the movie.
 
   // create queryUrl
-  var queryUrl = "http://www.omdbapi.com/?t=" + liriString + "&y=&plot=short&tomatoes=true&r=json";
+  var queryUrl = "http://www.omdbapi.com/?t=" + liriString + "&y=&plot=short&tomatoes=true&r=json&apikey=trilogy";
     // use request to request from OMDB
     request(queryUrl, function(error, response, body) {
       // error/status check
@@ -98,7 +98,14 @@ var movieFunction = function () {
         // store parsed object for recall
         var movie = JSON.parse(body)
         // display results
-        console.log(movie.title)
+        console.log("Movie Title: " + movie.Title);
+        console.log("Release Year: " + movie.Year);
+        console.log("IMDB Rating: " + movie.Ratings[0]["Value"]);
+        console.log("Rotten Tomatoes: " + movie.Ratings[1]["Value"])
+        console.log("Country Produced In: " + movie.Country);
+        console.log("Language: " + movie.Language);
+        console.log("Plot: " + movie.Plot);
+        console.log("Actors: " + movie.Actors);
       }
       else {
         console.log("Error: " + error)
@@ -108,9 +115,24 @@ var movieFunction = function () {
 
 // "do-what-it-says"
 var randomFunction = function () {
-  // * Using the `fs` Node package, LIRI will take the text inside of random.txt and then use it to call one of LIRI's commands.
+  // use FS to read file
+	fs.readFile("random.txt", "utf8", function(err, data) {
+		if (err) {
+			logOutput.error(err);
+		} else {
 
+			// creates array with data.
+			var randomArray = data.split(",");
 
+			// assign first item to "liriFunction"
+			liriFunction = randomArray[0];
+			// assign second item to "liriString"
+			liriString = randomArray[1];
+
+			// call input function
+			chooseFunction()
+		}
+	});
 }
 
 
